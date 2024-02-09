@@ -20,11 +20,14 @@ namespace Hectagon.BookJournal
         )
         {
             _logger.LogInformation("C# HTTP trigger function processed a request.");
-
+            
+            string userid = Authenticator.GetUserId(req);
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
 
-            try{
+            try
+            {
                 JournalEntry newEntry = JsonConvert.DeserializeObject<JournalEntry>(requestBody);
+                newEntry.Userid = userid;
                 CosmosDbService.AddJournalEntryAsync(newEntry).Wait();
             }
             catch (Exception e)

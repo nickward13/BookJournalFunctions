@@ -4,12 +4,12 @@ namespace Hectagon.BookJournal
 {
     public class JournalEntry
     {
-        public string Id {get; set;}
-        public string Userid {get; set;}
-        public string Title {get; set;}
-        public string Author {get; set;}
-        public string Review {get; set;}
-        public int Rating {get; set;}
+        public string? Id {get; set;}
+        public string? Userid {get; set;}
+        public string? Title {get; set;}
+        public string? Author {get; set;}
+        public string? Review {get; set;}
+        public int? Rating {get; set;}
 
         public JournalEntry(string userid, string title, string author, string review, int rating)
         {
@@ -19,6 +19,11 @@ namespace Hectagon.BookJournal
             Author = author;
             Review = review;
             Rating = rating;
+        }
+
+        public JournalEntry()
+        {
+            Id = Guid.NewGuid().ToString();
         }
     }
 

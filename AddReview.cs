@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace Hectagon.BookJournal
 {
@@ -15,14 +16,15 @@ namespace Hectagon.BookJournal
         }
 
         [Function("AddReview")]
-        public IActionResult Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post")] HttpRequest req
+        public async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post")] HttpRequest req
         )
         {
             _logger.LogInformation("C# HTTP trigger function processed a request.");
 
-            var newEntry = new JournalEntry(userid: "1", title: "The Great Gatsby", author: "F. Scott Fitzgerald", review: "A great book!", rating: 5);
+            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
 
             try{
+                JournalEntry newEntry = JsonConvert.DeserializeObject<JournalEntry>(requestBody);
                 CosmosDbService.AddJournalEntryAsync(newEntry).Wait();
             }
             catch (Exception e)

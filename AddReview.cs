@@ -15,10 +15,23 @@ namespace Hectagon.BookJournal
         }
 
         [Function("AddReview")]
-        public IActionResult Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post")] HttpRequest req)
+        public IActionResult Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post")] HttpRequest req
+        )
         {
             _logger.LogInformation("C# HTTP trigger function processed a request.");
-            return new OkObjectResult("Welcome to Azure Functions!");
+
+            var newEntry = new JournalEntry(userid: "1", title: "The Great Gatsby", author: "F. Scott Fitzgerald", review: "A great book!", rating: 5);
+
+            try{
+                CosmosDbService.AddJournalEntryAsync(newEntry).Wait();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Error adding journal entry");
+                return new BadRequestObjectResult("Error adding journal entry");
+            }
+
+            return new CreatedResult();
         }
     }
 }

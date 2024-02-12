@@ -21,3 +21,16 @@ content-type: application/json
     "review": "A great book!",
     "rating": 5
 }
+
+###
+
+POST https://bookjournaldev.azurewebsites.net/api/AddReview? HTTP/1.1
+content-type: application/json
+
+{
+    "userid": "1",
+    "title": "Gone with the wind",
+    "author": "Margaret Mitchell",
+    "review": "A great book!",
+    "rating": 5
+}

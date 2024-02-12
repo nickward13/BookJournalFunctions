@@ -22,13 +22,22 @@ namespace Hectagon.BookJournal
             _logger.LogInformation("C# HTTP trigger function processed a request.");
             
             string userid = Authenticator.GetUserId(req);
+            
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+            if (string.IsNullOrEmpty(requestBody))
+            {
+                return new BadRequestObjectResult("Please pass a journal entry in the request body");
+            }
+
+            _logger.LogInformation($"Adding journal entry for user {userid}");
 
             try
             {
                 JournalEntry newEntry = JsonConvert.DeserializeObject<JournalEntry>(requestBody);
                 newEntry.Userid = userid;
+                _logger.LogInformation($"Adding journal entry with title {newEntry.Title} for user {newEntry.Userid}");
                 CosmosDbService.AddJournalEntryAsync(newEntry).Wait();
+                _logger.LogInformation($"Successfully added journal entry with title {newEntry.Title} for user {newEntry.Userid}");
             }
             catch (Exception e)
             {

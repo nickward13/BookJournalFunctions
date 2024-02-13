@@ -41,7 +41,7 @@ namespace Hectagon.BookJournal
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "Error adding journal entry");
+                _logger.LogError(e, $"Error adding journal entry: {e.Message}");
                 return new BadRequestObjectResult("Error adding journal entry");
             }
 

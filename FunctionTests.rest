@@ -13,6 +13,7 @@ content-type: application/json
 
 POST http://localhost:7071/api/AddReview HTTP/1.1
 content-type: application/json
+x-ms-client-principal-id: programmatic-test-user
 
 {
     "userid": "1",
@@ -24,12 +25,17 @@ content-type: application/json
 
 ###
 
+GET https://bookjournaldev.azurewebsites.net/.auth/login/aad HTTP/1.1
+
+###
+
 POST https://bookjournaldev.azurewebsites.net/api/AddReview? HTTP/1.1
 content-type: application/json
+x-zumo-auth: 
 
 {
     "userid": "1",
-    "title": "Gone with the wind",
+    "title": "Testing now",
     "author": "Margaret Mitchell",
     "review": "A great book!",
     "rating": 5

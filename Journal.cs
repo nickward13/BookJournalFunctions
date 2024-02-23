@@ -54,5 +54,21 @@ namespace Hectagon.BookJournal
             JournalEntry entry = await container.ReadItemAsync<JournalEntry>(id, new PartitionKey(userid));
             return entry;
         }
+
+        public static async Task<List<JournalEntry>> GetJournalEntriesAsync(string userid)
+        {
+            var query = new QueryDefinition("SELECT * FROM c WHERE c.userid = @userid")
+                .WithParameter("@userid", userid);
+            List<JournalEntry> entries = new List<JournalEntry>();
+            using (FeedIterator<JournalEntry> resultSet = container.GetItemQueryIterator<JournalEntry>(query))
+            {
+                while (resultSet.HasMoreResults)
+                {
+                    FeedResponse<JournalEntry> response = await resultSet.ReadNextAsync();
+                    entries.AddRange(response);
+                }
+            }
+            return entries;
+        }
     }
 }

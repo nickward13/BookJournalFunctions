@@ -20,10 +20,9 @@ namespace Hectagon.BookJournal
         )
         {
             _logger.LogInformation("C# HTTP trigger function processed a request.");
-            _logger.LogInformation($"CosmosDB connection string: {System.Environment.GetEnvironmentVariable("BookJournalCosmosDBConnectionString").Substring(0,50)}");
-            
-            string userid = Authenticator.GetUserId(req);
-            
+
+            string userid = Authenticator.GetUserId(req) ?? string.Empty;
+
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             if (string.IsNullOrEmpty(requestBody))
             {

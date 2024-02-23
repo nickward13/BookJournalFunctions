@@ -48,5 +48,11 @@ namespace Hectagon.BookJournal
         {
             await container.CreateItemAsync(entry, new PartitionKey(entry.Userid));
         }
+
+        public static async Task<JournalEntry> GetJournalEntryAsync(string id, string userid)
+        {
+            JournalEntry entry = await container.ReadItemAsync<JournalEntry>(id, new PartitionKey(userid));
+            return entry;
+        }
     }
 }

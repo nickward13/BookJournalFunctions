@@ -31,7 +31,12 @@ namespace Hectagon.BookJournal
             string userid = Authenticator.GetUserId(req) ?? string.Empty;
 
             // get the review from the database
-            JournalEntry review = CosmosDbService.GetJournalEntryAsync(reviewId, userid).Result;
+            JournalEntry? review = CosmosDbService.GetJournalEntryAsync(reviewId, userid).Result;
+
+            if(review == null)
+            {
+                return new NotFoundObjectResult("Review not found");
+            }
 
             // return review to the caller
             return new OkObjectResult(review);

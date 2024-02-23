@@ -51,8 +51,14 @@ namespace Hectagon.BookJournal
 
         public static async Task<JournalEntry> GetJournalEntryAsync(string id, string userid)
         {
-            JournalEntry entry = await container.ReadItemAsync<JournalEntry>(id, new PartitionKey(userid));
-            return entry;
+            try{
+                JournalEntry entry = await container.ReadItemAsync<JournalEntry>(id, new PartitionKey(userid));
+                return entry;
+            }
+            catch(CosmosException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                return null;
+            }
         }
 
         public static async Task<List<JournalEntry>> GetJournalEntriesAsync(string userid)
